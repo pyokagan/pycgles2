@@ -2,10 +2,106 @@
 #define _PYCGLES2_GL_ES_VERSION_2_0_H_
 #ifdef GL_ES_VERSION_2_0
 #include <Python.h>
+#include <structmember.h>
 #include <pycgles2.h>
 #include "gl.h"
 #include "util.h"
 #include "ctxstruct.h"
+
+
+typedef struct {
+    PyObject_HEAD
+    PyObject *in_weakreflist;
+    PyCGLES2_Context *gl;
+    GLuint id;
+} PyCGLES2_Buffer;
+
+
+static PyObject *
+PyCGLES2_BufferNew(PyTypeObject *type, PyObject *args, PyObject *kwds)
+{
+    PyCGLES2_Buffer *self;
+    if (!(self = (PyCGLES2_Buffer*)type->tp_alloc(type, 0)))
+        return NULL;
+    self->in_weakreflist = NULL;
+    return (PyObject*) self;
+}
+
+
+static void
+PyCGLES2_BufferDealloc(PyCGLES2_Buffer *self)
+{
+    if (self->in_weakreflist != NULL)
+        PyObject_ClearWeakRefs((PyObject*) self);
+    if (self->gl && self->id) {
+        self->gl->deleteBuffers(1, &self->id);
+        Py_DECREF(self->gl);
+    }
+    Py_TYPE(self)->tp_free((PyObject*) self);
+}
+
+
+static PyMemberDef PyCGLES2_BufferMembers[] = {
+    {"context", T_OBJECT_EX, offsetof(PyCGLES2_Buffer, gl), READONLY,
+     "Buffer context"},
+    {"id", T_UINT, offsetof(PyCGLES2_Buffer, id), READONLY,
+     "Buffer ID"},
+    {NULL, 0, 0, 0, NULL}
+};
+
+
+static PyTypeObject PyCGLES2_BufferType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    /* tp_name           */ "cgles2.Buffer",
+    /* tp_basicsize      */ sizeof(PyCGLES2_Buffer),
+    /* tp_itemsize       */ 0,
+    /* tp_dealloc        */ (destructor) PyCGLES2_BufferDealloc,
+    /* tp_print          */ 0,
+    /* tp_getattr        */ 0,
+    /* tp_setattr        */ 0,
+    /* tp_reserved       */ 0,
+    /* tp_repr           */ 0,
+    /* tp_as_number      */ 0,
+    /* tp_as_sequence    */ 0,
+    /* tp_as_mapping     */ 0,
+    /* tp_hash           */ 0,
+    /* tp_call           */ 0,
+    /* tp_str            */ 0,
+    /* tp_getattro       */ 0,
+    /* tp_setattro       */ 0,
+    /* tp_as_buffer      */ 0,
+    /* tp_flags          */ Py_TPFLAGS_DEFAULT,
+    /* tp_doc            */ "GLES2 Buffer",
+    /* tp_traverse       */ 0,
+    /* tp_clear          */ 0,
+    /* tp_richcompare    */ 0,
+    /* tp_weaklistoffset */ offsetof(PyCGLES2_Buffer, in_weakreflist),
+    /* tp_iter           */ 0,
+    /* tp_iternext       */ 0,
+    /* tp_methods        */ 0,
+    /* tp_members        */ PyCGLES2_BufferMembers,
+    /* tp_getset         */ 0,
+    /* tp_base           */ 0,
+    /* tp_dict           */ 0,
+    /* tp_descr_get      */ 0,
+    /* tp_descr_set      */ 0,
+    /* tp_dictoffset     */ 0,
+    /* tp_init           */ 0,
+    /* tp_alloc          */ 0,
+    /* tp_new            */ PyCGLES2_BufferNew,
+};
+
+
+static int
+PyCGLES2_BufferContextMatch(PyCGLES2_Buffer *buf, PyCGLES2_Context *ctx)
+{
+    if (buf->gl == ctx) {
+        return 1;
+    } else {
+        PyErr_SetString(PyExc_ValueError, "Buffer context mismatch");
+        return 0;
+    }
+}
 
 
 /* TODO(NotImplemented): glActiveTexture */
@@ -38,13 +134,19 @@ PyCGLES2_glBindAttribLocation(PyCGLES2_Context *self, PyObject *args, PyObject *
 }
 
 
-/* TODO(NotImplemented): glBindBuffer */
 static PyObject *
 PyCGLES2_glBindBuffer(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
 {
-    /* void glBindBuffer (GLenum target, GLuint buffer) */
-    PyErr_SetString(PyExc_NotImplementedError, "glBindBuffer");
-    return NULL;
+    /* gles: void glBindBuffer (GLenum target, GLuint buffer) */
+    /* cgles2: bindBuffer(GLenum target, Buffer buffer) */
+    GLenum target;
+    PyCGLES2_Buffer *buf;
+    static char *kwlist[] = {"target", "buffer", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "IO!", kwlist,
+        &target, &PyCGLES2_BufferType, &buf))
+        return NULL;
+    self->bindBuffer(target, buf->id);
+    Py_RETURN_NONE;
 }
 
 
@@ -128,13 +230,20 @@ PyCGLES2_glBlendFuncSeparate(PyCGLES2_Context *self, PyObject *args, PyObject *k
 }
 
 
-/* TODO(NotImplemented): glBufferData */
 static PyObject *
 PyCGLES2_glBufferData(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
 {
-    /* void glBufferData (GLenum target, GLsizeiptr size, const void *data, GLenum usage) */
-    PyErr_SetString(PyExc_NotImplementedError, "glBufferData");
-    return NULL;
+    /* gles: void glBufferData (GLenum target, GLsizeiptr size, const void *data, GLenum usage)
+     * cgles2: bufferData(target, data, usage)*/
+    GLenum target, usage;
+    Py_buffer view;
+    static char *kwlist[] = {"target", "data", "usage", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "Iy*I", kwlist, &target,
+         &view, &usage))
+        return NULL;
+    self->bufferData(target, view.len, view.buf, usage);
+    PyBuffer_Release(&view);
+    Py_RETURN_NONE;
 }
 
 
@@ -285,6 +394,26 @@ PyCGLES2_glCullFace(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
     /* void glCullFace (GLenum mode) */
     PyErr_SetString(PyExc_NotImplementedError, "glCullFace");
     return NULL;
+}
+
+
+/* EXTENSION: glDeleteBuffer */
+static PyObject *
+PyCGLES2_glDeleteBuffer(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
+{
+    /* deleteBuffer(Buffer buffer) */
+    PyCGLES2_Buffer *buf;
+    static char *kwlist[] = {"buffer", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist,
+        &PyCGLES2_BufferType, &buf))
+        return NULL;
+    if (!PyCGLES2_BufferContextMatch(buf, self))
+        return NULL;
+    self->deleteBuffers(1, &buf->id);
+    buf->id = 0;
+    Py_DECREF(buf->gl);
+    buf->gl = NULL;
+    Py_RETURN_NONE;
 }
 
 
@@ -495,6 +624,34 @@ PyCGLES2_glFrontFace(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
     /* void glFrontFace (GLenum mode) */
     PyErr_SetString(PyExc_NotImplementedError, "glFrontFace");
     return NULL;
+}
+
+
+/* EXTENSION: glCreateBuffer */
+static PyObject *
+PyCGLES2_glCreateBuffer(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
+{
+    /* createBuffer() -> Buffer */
+    GLuint ids[1] = {0};
+    static char *kwlist[] = {NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "", kwlist))
+        return NULL;
+    self->genBuffers(1, ids);
+    if (ids[0]) {
+        PyCGLES2_Buffer *buf = (PyCGLES2_Buffer*) PyCGLES2_BufferNew(
+                                &PyCGLES2_BufferType, NULL, NULL);
+        if (buf == NULL) {
+            self->deleteBuffers(1, ids);
+            return NULL;
+        }
+        Py_INCREF(self);
+        buf->gl = self;
+        buf->id = ids[0];
+        return (PyObject*) buf;
+    } else {
+        /* Error occured, so return None */
+        Py_RETURN_NONE;
+    }
 }
 
 
@@ -818,13 +975,20 @@ PyCGLES2_glHint(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
 }
 
 
-/* TODO(NotImplemented): glIsBuffer */
 static PyObject *
 PyCGLES2_glIsBuffer(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
 {
-    /* GLboolean glIsBuffer (GLuint buffer) */
-    PyErr_SetString(PyExc_NotImplementedError, "glIsBuffer");
-    return NULL;
+    /* gles: GLboolean glIsBuffer (GLuint buffer)
+     * cgles2: isBuffer(Buffer buffer) -> bool */
+    PyCGLES2_Buffer *buf;
+    static char *kwlist[] = {"buffer", NULL};
+    if (!PyArg_ParseTupleAndKeywords(args, kwds, "O!", kwlist,
+        &PyCGLES2_BufferType, &buf))
+        return NULL;
+    if (!PyCGLES2_BufferContextMatch(buf, self))
+        return NULL;
+    GLboolean ret = self->isBuffer(buf->id);
+    return PyBool_FromLong(ret == GL_TRUE ? 1 : 0);
 }
 
 
@@ -1739,6 +1903,13 @@ PyCGLES2_GL_ES_VERSION_2_0(PyObject *m)
     for (e = enums; e->name != NULL; ++e)
         if (PyModule_AddIntConstant(m, e->name, e->value) != 0)
             return 0;
+
+    /* Buffer Type */
+    if (PyType_Ready(&PyCGLES2_BufferType) < 0) return 0;
+    Py_INCREF(&PyCGLES2_BufferType);
+    if (PyModule_AddObject(m, "Buffer", (PyObject*) &PyCGLES2_BufferType) != 0)
+        return 0;
+
     return 1;
 }
 

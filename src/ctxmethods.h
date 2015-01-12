@@ -298,6 +298,11 @@ static PyMethodDef PyCGLES2_ContextMethods[] = {
      (PyCFunction) PyCGLES2_glCullFace,
      METH_VARARGS | METH_KEYWORDS,
      "void glCullFace (GLenum mode)"},
+    /* EXTENSION: glDeleteBuffer */
+    {"deleteBuffer",
+     (PyCFunction) PyCGLES2_glDeleteBuffer,
+     METH_VARARGS | METH_KEYWORDS,
+     "delete buffer"},
     {"deleteBuffers",
      (PyCFunction) PyCGLES2_glDeleteBuffers,
      METH_VARARGS | METH_KEYWORDS,
@@ -382,6 +387,11 @@ static PyMethodDef PyCGLES2_ContextMethods[] = {
      (PyCFunction) PyCGLES2_glFrontFace,
      METH_VARARGS | METH_KEYWORDS,
      "void glFrontFace (GLenum mode)"},
+    /* EXTENSION: glCreateBuffer */
+    {"createBuffer",
+     (PyCFunction) PyCGLES2_glCreateBuffer,
+     METH_VARARGS | METH_KEYWORDS,
+     "create buffer"},
     {"genBuffers",
      (PyCFunction) PyCGLES2_glGenBuffers,
      METH_VARARGS | METH_KEYWORDS,
