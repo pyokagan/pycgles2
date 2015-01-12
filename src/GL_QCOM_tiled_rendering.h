@@ -1,0 +1,78 @@
+#ifndef _PYCGLES2_GL_QCOM_TILED_RENDERING_H_
+#define _PYCGLES2_GL_QCOM_TILED_RENDERING_H_
+#ifdef GL_QCOM_tiled_rendering
+#include <Python.h>
+#include <pycgles2.h>
+#include "gl.h"
+#include "util.h"
+#include "ctxstruct.h"
+
+
+/* TODO(NotImplemented): glStartTilingQCOM */
+static PyObject *
+PyCGLES2_glStartTilingQCOM(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
+{
+    /* void glStartTilingQCOM (GLuint x, GLuint y, GLuint width, GLuint height, GLbitfield preserveMask) */
+    PyErr_SetString(PyExc_NotImplementedError, "glStartTilingQCOM");
+    return NULL;
+}
+
+
+/* TODO(NotImplemented): glEndTilingQCOM */
+static PyObject *
+PyCGLES2_glEndTilingQCOM(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
+{
+    /* void glEndTilingQCOM (GLbitfield preserveMask) */
+    PyErr_SetString(PyExc_NotImplementedError, "glEndTilingQCOM");
+    return NULL;
+}
+
+
+static int
+PyCGLES2_GL_QCOM_tiled_rendering(PyObject *m)
+{
+    static const PyCGLES2_Enum enums[] = {
+        {"GL_COLOR_BUFFER_BIT0_QCOM", GL_COLOR_BUFFER_BIT0_QCOM},
+        {"GL_COLOR_BUFFER_BIT1_QCOM", GL_COLOR_BUFFER_BIT1_QCOM},
+        {"GL_COLOR_BUFFER_BIT2_QCOM", GL_COLOR_BUFFER_BIT2_QCOM},
+        {"GL_COLOR_BUFFER_BIT3_QCOM", GL_COLOR_BUFFER_BIT3_QCOM},
+        {"GL_COLOR_BUFFER_BIT4_QCOM", GL_COLOR_BUFFER_BIT4_QCOM},
+        {"GL_COLOR_BUFFER_BIT5_QCOM", GL_COLOR_BUFFER_BIT5_QCOM},
+        {"GL_COLOR_BUFFER_BIT6_QCOM", GL_COLOR_BUFFER_BIT6_QCOM},
+        {"GL_COLOR_BUFFER_BIT7_QCOM", GL_COLOR_BUFFER_BIT7_QCOM},
+        {"GL_DEPTH_BUFFER_BIT0_QCOM", GL_DEPTH_BUFFER_BIT0_QCOM},
+        {"GL_DEPTH_BUFFER_BIT1_QCOM", GL_DEPTH_BUFFER_BIT1_QCOM},
+        {"GL_DEPTH_BUFFER_BIT2_QCOM", GL_DEPTH_BUFFER_BIT2_QCOM},
+        {"GL_DEPTH_BUFFER_BIT3_QCOM", GL_DEPTH_BUFFER_BIT3_QCOM},
+        {"GL_DEPTH_BUFFER_BIT4_QCOM", GL_DEPTH_BUFFER_BIT4_QCOM},
+        {"GL_DEPTH_BUFFER_BIT5_QCOM", GL_DEPTH_BUFFER_BIT5_QCOM},
+        {"GL_DEPTH_BUFFER_BIT6_QCOM", GL_DEPTH_BUFFER_BIT6_QCOM},
+        {"GL_DEPTH_BUFFER_BIT7_QCOM", GL_DEPTH_BUFFER_BIT7_QCOM},
+        {"GL_STENCIL_BUFFER_BIT0_QCOM", GL_STENCIL_BUFFER_BIT0_QCOM},
+        {"GL_STENCIL_BUFFER_BIT1_QCOM", GL_STENCIL_BUFFER_BIT1_QCOM},
+        {"GL_STENCIL_BUFFER_BIT2_QCOM", GL_STENCIL_BUFFER_BIT2_QCOM},
+        {"GL_STENCIL_BUFFER_BIT3_QCOM", GL_STENCIL_BUFFER_BIT3_QCOM},
+        {"GL_STENCIL_BUFFER_BIT4_QCOM", GL_STENCIL_BUFFER_BIT4_QCOM},
+        {"GL_STENCIL_BUFFER_BIT5_QCOM", GL_STENCIL_BUFFER_BIT5_QCOM},
+        {"GL_STENCIL_BUFFER_BIT6_QCOM", GL_STENCIL_BUFFER_BIT6_QCOM},
+        {"GL_STENCIL_BUFFER_BIT7_QCOM", GL_STENCIL_BUFFER_BIT7_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT0_QCOM", GL_MULTISAMPLE_BUFFER_BIT0_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT1_QCOM", GL_MULTISAMPLE_BUFFER_BIT1_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT2_QCOM", GL_MULTISAMPLE_BUFFER_BIT2_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT3_QCOM", GL_MULTISAMPLE_BUFFER_BIT3_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT4_QCOM", GL_MULTISAMPLE_BUFFER_BIT4_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT5_QCOM", GL_MULTISAMPLE_BUFFER_BIT5_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT6_QCOM", GL_MULTISAMPLE_BUFFER_BIT6_QCOM},
+        {"GL_MULTISAMPLE_BUFFER_BIT7_QCOM", GL_MULTISAMPLE_BUFFER_BIT7_QCOM},
+        {NULL, 0}
+    };
+    const PyCGLES2_Enum *e;
+    for (e = enums; e->name != NULL; ++e)
+        if (PyModule_AddIntConstant(m, e->name, e->value) != 0)
+            return 0;
+    return 1;
+}
+
+
+#endif /* GL_QCOM_tiled_rendering */
+#endif /* _PYCGLES2_GL_QCOM_TILED_RENDERING_H_ */

@@ -1,0 +1,70 @@
+#ifndef _PYCGLES2_GL_EXT_DRAW_BUFFERS_H_
+#define _PYCGLES2_GL_EXT_DRAW_BUFFERS_H_
+#ifdef GL_EXT_draw_buffers
+#include <Python.h>
+#include <pycgles2.h>
+#include "gl.h"
+#include "util.h"
+#include "ctxstruct.h"
+
+
+/* TODO(NotImplemented): glDrawBuffersEXT */
+static PyObject *
+PyCGLES2_glDrawBuffersEXT(PyCGLES2_Context *self, PyObject *args, PyObject *kwds)
+{
+    /* void glDrawBuffersEXT (GLsizei n, const GLenum *bufs) */
+    PyErr_SetString(PyExc_NotImplementedError, "glDrawBuffersEXT");
+    return NULL;
+}
+
+
+static int
+PyCGLES2_GL_EXT_draw_buffers(PyObject *m)
+{
+    static const PyCGLES2_Enum enums[] = {
+        {"GL_MAX_COLOR_ATTACHMENTS_EXT", GL_MAX_COLOR_ATTACHMENTS_EXT},
+        {"GL_MAX_DRAW_BUFFERS_EXT", GL_MAX_DRAW_BUFFERS_EXT},
+        {"GL_DRAW_BUFFER0_EXT", GL_DRAW_BUFFER0_EXT},
+        {"GL_DRAW_BUFFER1_EXT", GL_DRAW_BUFFER1_EXT},
+        {"GL_DRAW_BUFFER2_EXT", GL_DRAW_BUFFER2_EXT},
+        {"GL_DRAW_BUFFER3_EXT", GL_DRAW_BUFFER3_EXT},
+        {"GL_DRAW_BUFFER4_EXT", GL_DRAW_BUFFER4_EXT},
+        {"GL_DRAW_BUFFER5_EXT", GL_DRAW_BUFFER5_EXT},
+        {"GL_DRAW_BUFFER6_EXT", GL_DRAW_BUFFER6_EXT},
+        {"GL_DRAW_BUFFER7_EXT", GL_DRAW_BUFFER7_EXT},
+        {"GL_DRAW_BUFFER8_EXT", GL_DRAW_BUFFER8_EXT},
+        {"GL_DRAW_BUFFER9_EXT", GL_DRAW_BUFFER9_EXT},
+        {"GL_DRAW_BUFFER10_EXT", GL_DRAW_BUFFER10_EXT},
+        {"GL_DRAW_BUFFER11_EXT", GL_DRAW_BUFFER11_EXT},
+        {"GL_DRAW_BUFFER12_EXT", GL_DRAW_BUFFER12_EXT},
+        {"GL_DRAW_BUFFER13_EXT", GL_DRAW_BUFFER13_EXT},
+        {"GL_DRAW_BUFFER14_EXT", GL_DRAW_BUFFER14_EXT},
+        {"GL_DRAW_BUFFER15_EXT", GL_DRAW_BUFFER15_EXT},
+        {"GL_COLOR_ATTACHMENT0_EXT", GL_COLOR_ATTACHMENT0_EXT},
+        {"GL_COLOR_ATTACHMENT1_EXT", GL_COLOR_ATTACHMENT1_EXT},
+        {"GL_COLOR_ATTACHMENT2_EXT", GL_COLOR_ATTACHMENT2_EXT},
+        {"GL_COLOR_ATTACHMENT3_EXT", GL_COLOR_ATTACHMENT3_EXT},
+        {"GL_COLOR_ATTACHMENT4_EXT", GL_COLOR_ATTACHMENT4_EXT},
+        {"GL_COLOR_ATTACHMENT5_EXT", GL_COLOR_ATTACHMENT5_EXT},
+        {"GL_COLOR_ATTACHMENT6_EXT", GL_COLOR_ATTACHMENT6_EXT},
+        {"GL_COLOR_ATTACHMENT7_EXT", GL_COLOR_ATTACHMENT7_EXT},
+        {"GL_COLOR_ATTACHMENT8_EXT", GL_COLOR_ATTACHMENT8_EXT},
+        {"GL_COLOR_ATTACHMENT9_EXT", GL_COLOR_ATTACHMENT9_EXT},
+        {"GL_COLOR_ATTACHMENT10_EXT", GL_COLOR_ATTACHMENT10_EXT},
+        {"GL_COLOR_ATTACHMENT11_EXT", GL_COLOR_ATTACHMENT11_EXT},
+        {"GL_COLOR_ATTACHMENT12_EXT", GL_COLOR_ATTACHMENT12_EXT},
+        {"GL_COLOR_ATTACHMENT13_EXT", GL_COLOR_ATTACHMENT13_EXT},
+        {"GL_COLOR_ATTACHMENT14_EXT", GL_COLOR_ATTACHMENT14_EXT},
+        {"GL_COLOR_ATTACHMENT15_EXT", GL_COLOR_ATTACHMENT15_EXT},
+        {NULL, 0}
+    };
+    const PyCGLES2_Enum *e;
+    for (e = enums; e->name != NULL; ++e)
+        if (PyModule_AddIntConstant(m, e->name, e->value) != 0)
+            return 0;
+    return 1;
+}
+
+
+#endif /* GL_EXT_draw_buffers */
+#endif /* _PYCGLES2_GL_EXT_DRAW_BUFFERS_H_ */
