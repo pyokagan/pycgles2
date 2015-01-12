@@ -31,7 +31,7 @@ PyCGLES2_ContextDealloc(PyCGLES2_Context *self)
 static PyTypeObject PyCGLES2_ContextType = {
     PyVarObject_HEAD_INIT(NULL, 0)
     /* tp_name           */ "cgles2.Context",
-    /* tp_basicsize      */ sizeof(PyGLES2_Context),
+    /* tp_basicsize      */ sizeof(PyCGLES2_Context),
     /* tp_itemsize       */ 0,
     /* tp_dealloc        */ (destructor) PyCGLES2_ContextDealloc,
     /* tp_print          */ 0,
@@ -53,7 +53,7 @@ static PyTypeObject PyCGLES2_ContextType = {
     /* tp_traverse       */ 0,
     /* tp_clear          */ 0,
     /* tp_richcompare    */ 0,
-    /* tp_weaklistoffset */ offsetof(PyGLES2_Context, in_weakreflist),
+    /* tp_weaklistoffset */ offsetof(PyCGLES2_Context, in_weakreflist),
     /* tp_iter           */ 0,
     /* tp_iternext       */ 0,
     /* tp_methods        */ PyCGLES2_ContextMethods,
